@@ -3,7 +3,7 @@ Can utilize MG-Graph Powershell module to quickly find user object ids
 Lazily get all users and relevant properties:
     <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
-Get information based on filter searches --
+<br/>Get information based on filter searches --
   1. Get user object ids via filtering for upn:
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$filter=startswith(userprincipalname,'a')&`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
