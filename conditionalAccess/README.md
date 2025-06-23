@@ -44,7 +44,7 @@ Lazily get all users and relevant properties:
 | userType          | : Member                               |
 | accountEnabled    | : true                                 |
 
-  3. Get users object ids via their group memberships when you know the group name or approximate group name:
+  3. Get users object ids via their group memberships when you know the group name or approximate group name (in this case groups starting with "tier"):
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/groups?`$filter=startswith(displayname, 'tier')&expand=members(`$select=id,userprincipalname)").value.members | Select-Object `@odata.type,displayname,userprincipalname,id,country,usagelagelocation,usertype,accountenabled | Format-List```
 
 <br/>example output (utilize @odata.type to easily identity user vs device):
@@ -81,3 +81,18 @@ Lazily get all users and relevant properties:
 | usagelagelocation |                                      |
 | userType          | Member                               |
 | accountEnabled    | False                                |
+
+<br/>Reverse lookup by object id:
+    <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$filter=id eq 'f89b0a27-4a15-4108-9278-0ae6967b8f6e'&`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
+
+<br/>example output:
+
+| key               | value                                  |
+|-------------------|----------------------------------------|
+| displayName       | Woodrow Wilson                         |
+| userPrincipalName | wwilson@domain.com                     |
+| id                | f89b0a27-4a15-4108-9278-0ae6967b8f6e   |
+| country           | US                                     |
+| usageLocation     | US                                     |
+| userType          | Member                                 |
+| accountEnabled    | True                                   |
