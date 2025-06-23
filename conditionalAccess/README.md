@@ -1,13 +1,34 @@
-Can utilize MG-Graph Powershell module to quickly find user object ids
+Can utilize MG-Graph Powershell module to quickly find group and user object ids to utilize in the conditional access policies.
+
+Lazily get all groups and relevant properties:
+    <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/groups?`$filter=startswith(displayname,'Fido')").value | Select-Object displayName,description,id,securityEnabled,groupTypes,membershipRule```
 
 Lazily get all users and relevant properties:
     <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
-<br/>Get information based on filter searches --
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Get Group information based on filter searches --
+<br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/groups?`$filter=startswith(displayname,'corp')").value | Select-Object displayName,description,id,securityEnabled,groupTypes,membershipRule```
+
+example output:
+
+| key             | value                                                                                |
+|-----------------|--------------------------------------------------------------------------------------|
+| displayName     | Corporate Owned Windows 10/11 Devices                                                |
+| description     | Dynamically Assigned group for Windows 10/11 Devices for automatic Intune enrollment |
+| id              | f953cb63-e474-4258-a27d-fd33f2d94971                                                 |
+| securityEnabled | True                                                                                 |
+| groupTypes      | {DynamicMembership}                                                                  |
+| membershipRule  | (device.deviceOwnership -eq "Company") and (device.deviceOSType -eq "Windows")       |
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Get User information based on filter searches --
   1. Get user object ids via filtering for upn:
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$filter=startswith(userprincipalname,'a')&`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
-<br/>example output:
+example output:
 
 | key               | value                                |
 |-------------------|--------------------------------------|
@@ -32,7 +53,7 @@ Lazily get all users and relevant properties:
   2. Get user object ids via job titles:
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$filter=startswith(jobtitle,'tier 1')&`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
-<br/>example output:
+example output:
 
 | key               | value                                  |
 |-------------------|----------------------------------------|
@@ -47,7 +68,7 @@ Lazily get all users and relevant properties:
   3. Get users object ids via their group memberships when you know the group name or approximate group name (in this case groups starting with "tier"):
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/groups?`$filter=startswith(displayname, 'tier')&expand=members(`$select=id,userprincipalname)").value.members | Select-Object `@odata.type,displayname,userprincipalname,id,country,usagelagelocation,usertype,accountenabled | Format-List```
 
-<br/>example output (utilize @odata.type to easily identity user vs device):
+example output (utilize @odata.type to easily identity user vs device):
 
 | key               | value                                |
 |-------------------|--------------------------------------|
@@ -85,7 +106,7 @@ Lazily get all users and relevant properties:
 <br/>Reverse lookup by object id:
     <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$filter=id eq 'f89b0a27-4a15-4108-9278-0ae6967b8f6e'&`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
-<br/>example output:
+example output:
 
 | key               | value                                  |
 |-------------------|----------------------------------------|
