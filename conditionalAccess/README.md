@@ -29,7 +29,7 @@ Get information based on filter searches --
 | userType          | Member                               |
 | accountEnabled    | true                                 |
 
-  3. Get user object ids via job titles:
+  2. Get user object ids via job titles:
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users?`$filter=startswith(jobtitle,'tier 1')&`$select=displayname,userprincipalname,id,country,usagelocation,usertype,accountenabled" -OutputType PSObject).value```
 
 <br/>example output:
@@ -44,7 +44,7 @@ Get information based on filter searches --
 | userType          | : Member                               |
 | accountEnabled    | : true                                 |
 
-  5. Get users object ids via their group memberships when you know the group name or approximate group name:
+  3. Get users object ids via their group memberships when you know the group name or approximate group name:
      <br/>```(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/groups?`$filter=startswith(displayname, 'tier')&expand=members(`$select=id,userprincipalname)").value.members | Select-Object `@odata.type,displayname,userprincipalname,id,country,usagelagelocation,usertype,accountenabled | Format-List```
 
 <br/>example output (utilize @odata.type to easily identity user vs device):
