@@ -133,7 +133,9 @@ resource "azuread_conditional_access_policy" "Restrict_Philippines_Users" {
     }
 
     locations {
-      excluded_locations = ["1a17a23b-992a-4aa2-93c1-524471daa902"]
+      excluded_locations = [
+        "1a17a23b-992a-4aa2-93c1-524471daa902" #Philippines Named Location
+      ]
       included_locations = ["All"]
     }
 
